@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Checklist de Ensaio - Figurino</title>
+
+<style>
+body{
+background:#0a0a0a;
+color:#fff;
+font-family:Arial;
+text-align:center;
+}
+
+h1{
+color:#00c3ff;
+}
+
+.container{
+background:#111;
+padding:20px;
+margin:20px auto;
+width:95%;
+max-width:700px;
+border-radius:10px;
+}
+
+input, select, button{
+padding:10px;
+margin:5px;
+width:90%;
+border-radius:5px;
+border:none;
+}
+
+button{
+background:#00c3ff;
+font-weight:bold;
+cursor:pointer;
+}
+
+video, canvas{
+width:90%;
+margin-top:10px;
+border-radius:10px;
+}
+
+table{
+width:95%;
+margin:auto;
+margin-top:20px;
+border-collapse:collapse;
+}
+
+th, td{
+border:1px solid #00c3ff;
+padding:8px;
+}
+
+img{
+width:80px;
+border-radius:5px;
+}
+
+.ok{color:#00ff88;}
+</style>
+</head>
+
+<body>
+
+<h1>🎭 Checklist Figurino - Ensaio</h1>
+
+<div class="container">
+
+<input id="nome" placeholder="Nome do Dançarino">
+
+<input id="coreo" placeholder="Nome da Coreografia">
+
+<input id="sequencia" type="number" placeholder="Sequência do Show">
+
+<select id="figurino">
+<option>Figurino OK</option>
+<option>Ajustar</option>
+<option>Trocar</option>
+</select>
+
+<br>
+
+<video id="video" autoplay></video>
+<br>
+<button onclick="tirarFoto()">📸 Tirar Foto</button>
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<br>
+<button onclick="salvar()">✔️ Salvar Registro</button>
+
+</div>
+
+<table>
+<thead>
+<tr>
+<th>Seq</th>
+<th>Nome</th>
+<th>Coreografia</th>
+<th>Figurino</th>
+<th>Hora</th>
+<th>Foto</th>
+</tr>
+</thead>
+<tbody id="lista"></tbody>
+</table>
+
+<script>
+
+let imagemAtual = "";
+
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => {
+document.getElementById('video').srcObject = stream;
+});
+
+function tirarFoto(){
+let video = document.getElementById('video');
+let canvas = document.getElementById('canvas');
+let ctx = canvas.getContext('2d');
+
+canvas.width = video.videoWidth;
+canvas.height = video.videoHeight;
+
+ctx.drawImage(video, 0, 0);
+
+imagemAtual = canvas.toDataURL("image/png");
+}
+
+function salvar(){
+
+let nome = document.getElementById('nome').value;
+let coreo = document.getElementById('coreo').value;
+let seq = document.getElementById('sequencia').value;
+let figurino = document.getElementById('figurino').value;
+
+if(!imagemAtual){
+alert("Tire a foto primeiro!");
+return;
+}
+
+let hora = new Date().toLocaleTimeString();
+
+let linha = `
+<tr>
+<td>${seq}</td>
+<td>${nome}</td>
+<td>${coreo}</td>
+<td class="ok">${figurino}</td>
+<td>${hora}</td>
+<td><img src="${imagemAtual}"></td>
+</tr>
+`;
+
+document.getElementById('lista').innerHTML += linha;
+
+imagemAtual = "";
+
+}
+
+</script>
+
+</body>
+</html>
