@@ -132,7 +132,7 @@ td img{
 }
 .painel-topo{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:12px;
   margin-bottom:16px;
 }
@@ -171,6 +171,30 @@ td img{
   margin-top:28px;
   text-align:left;
 }
+.historico-pdf{
+  margin-top:28px;
+  text-align:left;
+}
+.historico-pdf h2{
+  text-align:center;
+  color:#ffd54f;
+  margin:0 0 14px 0;
+}
+.lista-pdf{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:14px;
+}
+.card-pdf{
+  background:#0f1524;
+  border:1px solid #294a7a;
+  border-radius:14px;
+  padding:14px;
+  box-shadow:0 0 14px rgba(0,0,0,.2);
+}
+.card-pdf strong{color:#ffd54f;}
+.card-pdf .mini{font-size:14px;line-height:1.5;color:#d8e3ff;margin-top:6px;}
+
 .historico-fotos h2,
 .historico-tabela h2{
   text-align:center;
@@ -375,6 +399,7 @@ td img{
     <div class="card-info">Total de registros<br><strong id="totalRegistros">0</strong></div>
     <div class="card-info">Fotos salvas<br><strong id="totalFotos">0</strong></div>
     <div class="card-info">Salvamento<br><strong id="statusSalvamento">Ativo no navegador</strong></div>
+    <div class="card-info">PDFs gerados<br><strong id="totalPDFs">0</strong></div>
   </div>
 
   <div class="form-grid">
@@ -420,6 +445,11 @@ td img{
   </div>
 
   <div id="areaPDF">
+    <div class="historico-pdf">
+      <h2>Histórico de PDFs Gerados</h2>
+      <div class="lista-pdf" id="listaPDFs"></div>
+    </div>
+
     <div class="historico-fotos">
       <h2>Histórico de Fotos</h2>
       <div class="galeria" id="galeriaFotos"></div>
@@ -456,11 +486,13 @@ td img{
 </div>
 
 <script>
-const CHAVE_STORAGE = "checklist_ensaio_figurino_registros_v3";
+const CHAVE_STORAGE = "checklist_ensaio_figurino_registros_v4";
+const CHAVE_PDFS = "checklist_ensaio_figurino_pdfs_v1";
 let imagemAtual = "";
 let usandoFrontal = false;
 let streamAtual = null;
 let registros = [];
+let historicoPDFs = [];
 
 function atualizarRelogio(){
   const agora = new Date();
@@ -471,14 +503,20 @@ atualizarRelogio();
 
 function salvarNoStorage(){
   localStorage.setItem(CHAVE_STORAGE, JSON.stringify(registros));
+  localStorage.setItem(CHAVE_PDFS, JSON.stringify(historicoPDFs));
   atualizarTotais();
 }
 
 function carregarDoStorage(){
   const dados = localStorage.getItem(CHAVE_STORAGE);
+  const dadosPDF = localStorage.getItem(CHAVE_PDFS);
   if(dados){
     try{ registros = JSON.parse(dados) || []; }
     catch(e){ registros = []; }
+  }
+  if(dadosPDF){
+    try{ historicoPDFs = JSON.parse(dadosPDF) || []; }
+    catch(e){ historicoPDFs = []; }
   }
   renderizarTudo();
 }
@@ -486,6 +524,7 @@ function carregarDoStorage(){
 function atualizarTotais(){
   document.getElementById("totalRegistros").innerText = registros.length;
   document.getElementById("totalFotos").innerText = registros.filter(r => !!r.foto).length;
+  document.getElementById("totalPDFs").innerText = historicoPDFs.length;
 }
 
 async function iniciarCamera(){
@@ -619,8 +658,41 @@ function renderizarGaleria(){
 function renderizarTudo(){
   renderizarTabela();
   renderizarGaleria();
+  renderizarHistoricoPDF();
   atualizarTotais();
 }
+
+function renderizarHistoricoPDF(){
+  const lista = document.getElementById("listaPDFs");
+  if(historicoPDFs.length === 0){
+    lista.innerHTML = '<div class="vazio">Nenhum PDF gerado ainda.</div>';
+    return;
+  }
+  lista.innerHTML = [...historicoPDFs].reverse().map(item => `
+    <div class="card-pdf">
+      <strong>${item.nome}</strong>
+      <div class="mini">${item.data} • ${item.hora}</div>
+      <div class="mini">Registros incluídos: ${item.totalRegistros}</div>
+      <div class="mini">Fotos incluídas: ${item.totalFotos}</div>
+    </div>
+  `).join("");
+}
+
+function registrarPDFGerado(){
+  const agora = new Date();
+  const nomeBase = `historico-checklist-${agora.toLocaleDateString("pt-BR").replace(/\//g,'-')}-${agora.toLocaleTimeString("pt-BR").replace(/:/g,'-')}.pdf`;
+  historicoPDFs.push({
+    id: Date.now(),
+    nome: nomeBase,
+    data: agora.toLocaleDateString("pt-BR"),
+    hora: agora.toLocaleTimeString("pt-BR"),
+    totalRegistros: registros.length,
+    totalFotos: registros.filter(r => !!r.foto).length
+  });
+  salvarNoStorage();
+  renderizarHistoricoPDF();
+}
+
 
 function excluirRegistro(id){
   if(!confirm("Deseja excluir este registro?")) return;
@@ -630,11 +702,13 @@ function excluirRegistro(id){
 }
 
 function apagarTudo(){
-  if(!confirm("Tem certeza que deseja apagar todos os registros salvos?")) return;
+  if(!confirm("Tem certeza que deseja apagar todos os registros salvos e o histórico de PDFs?")) return;
   registros = [];
+  historicoPDFs = [];
   localStorage.removeItem(CHAVE_STORAGE);
+  localStorage.removeItem(CHAVE_PDFS);
   renderizarTudo();
-  alert("Todos os registros foram apagados.");
+  alert("Todos os registros e PDFs salvos foram apagados.");
 }
 
 function exportarJSON(){
@@ -652,7 +726,8 @@ function gerarPDFHistorico(){
     alert("Não há histórico para gerar PDF.");
     return;
   }
-  window.print();
+  registrarPDFGerado();
+  setTimeout(() => window.print(), 150);
 }
 
 function limparCampos(){
