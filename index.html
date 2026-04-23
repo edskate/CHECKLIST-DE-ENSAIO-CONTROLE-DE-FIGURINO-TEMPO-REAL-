@@ -3,135 +3,94 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checklist de Ensaio com Foto do Figurino</title>
-
+<title>Checklist de Ensaio com Histórico e PDF</title>
 <style>
-*{
-  box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
 body{
   margin:0;
-  font-family:Arial, sans-serif;
+  font-family:Arial,sans-serif;
   background:#0b0f1a;
-  color:#ffffff;
+  color:#fff;
   text-align:center;
 }
-
 header{
   background:linear-gradient(90deg,#0d47a1,#c62828);
   padding:20px 10px;
-  box-shadow:0 2px 12px rgba(0,0,0,0.4);
+  box-shadow:0 2px 12px rgba(0,0,0,.4);
 }
-
-h1{
-  margin:0;
-  font-size:28px;
-}
-
+h1{margin:0;font-size:28px}
 .relogio{
   margin-top:8px;
   font-size:18px;
   font-weight:bold;
   color:#ffd54f;
 }
-
 .container{
   width:95%;
-  max-width:1000px;
+  max-width:1200px;
   margin:20px auto;
   background:#151b2c;
   border-radius:16px;
   padding:20px;
-  box-shadow:0 0 18px rgba(0,0,0,0.35);
+  box-shadow:0 0 18px rgba(0,0,0,.35);
 }
-
 .form-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:12px;
 }
-
-@media(max-width:768px){
-  .form-grid{
-    grid-template-columns:1fr;
-  }
-}
-
-input, select, button{
+@media(max-width:768px){.form-grid{grid-template-columns:1fr}}
+input,select,button{
   width:100%;
   padding:12px;
   border:none;
   border-radius:10px;
   font-size:16px;
 }
-
-input, select{
+input,select{
   background:#0f1524;
   color:#fff;
   border:1px solid #294a7a;
 }
-
 button{
-  color:white;
+  color:#fff;
   font-weight:bold;
   cursor:pointer;
-  transition:0.2s;
+  transition:.2s;
 }
-
-button:hover{
-  transform:scale(1.02);
-}
-
-.btn-camera{
-  background:#1565c0;
-}
-
-.btn-trocar{
-  background:#8e24aa;
-}
-
-.btn-foto{
-  background:#d32f2f;
-}
-
-.btn-salvar{
-  background:#2e7d32;
-}
-
-.btn-limpar{
-  background:#ef6c00;
-}
-
-.video-area{
-  margin-top:20px;
-}
-
-video, canvas{
+button:hover{transform:scale(1.02)}
+.btn-camera{background:#1565c0}
+.btn-trocar{background:#8e24aa}
+.btn-foto{background:#d32f2f}
+.btn-salvar{background:#2e7d32}
+.btn-limpar{background:#ef6c00}
+.btn-apagar-tudo{background:#8b0000}
+.btn-exportar{background:#00897b}
+.btn-pdf{background:#6a1b9a}
+.video-area{margin-top:20px}
+video,canvas{
   width:100%;
   max-width:460px;
   background:#000;
   border-radius:14px;
   border:3px solid #1976d2;
 }
-
 .botoes-camera{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:10px;
   margin-top:15px;
 }
-
+.botoes-secundarios{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:10px;
+}
 @media(max-width:768px){
-  .botoes-camera{
-    grid-template-columns:1fr 1fr;
-  }
+  .botoes-camera,.botoes-secundarios{grid-template-columns:1fr 1fr}
 }
-
-.preview-box{
-  margin-top:20px;
-}
-
+.preview-box{margin-top:20px}
 .preview-box img{
   width:100%;
   max-width:260px;
@@ -139,77 +98,156 @@ video, canvas{
   border:3px solid #c62828;
   display:none;
 }
-
 .table-wrap{
   overflow-x:auto;
   margin-top:25px;
 }
-
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:950px;
+  min-width:1100px;
 }
-
-th, td{
+th,td{
   border:1px solid #2f3a52;
   padding:10px;
   text-align:center;
   vertical-align:middle;
 }
-
-th{
-  background:#0d47a1;
-  color:#fff;
-}
-
-td{
-  background:#111827;
-}
-
+th{background:#0d47a1;color:#fff}
+td{background:#111827}
 td img{
   width:90px;
   border-radius:8px;
   border:2px solid #c62828;
 }
-
-.ok{
-  color:#66bb6a;
-  font-weight:bold;
-}
-
-.ajustar{
-  color:#ffca28;
-  font-weight:bold;
-}
-
-.trocar{
-  color:#ef5350;
-  font-weight:bold;
-}
-
-.info-camera{
+.ok{color:#66bb6a;font-weight:bold}
+.ajustar{color:#ffca28;font-weight:bold}
+.trocar{color:#ef5350;font-weight:bold}
+.info-camera,.info-salvamento{
   margin-top:10px;
   font-size:14px;
   color:#90caf9;
   font-weight:bold;
 }
-
+.painel-topo{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:16px;
+}
+.card-info{
+  background:#0f1524;
+  border:1px solid #294a7a;
+  border-radius:12px;
+  padding:14px;
+}
+.card-info strong{
+  color:#ffd54f;
+  font-size:20px;
+}
+.acoes-linha{
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+}
+.btn-excluir-item{
+  background:#b71c1c;
+  padding:8px 10px;
+  width:auto;
+  border-radius:8px;
+}
 .rodape{
   margin:30px 0;
   color:#aab4c4;
   font-size:14px;
 }
+.vazio{
+  color:#9fb3d9;
+  padding:18px;
+}
+.historico-fotos{
+  margin-top:28px;
+  text-align:left;
+}
+.historico-fotos h2,
+.historico-tabela h2{
+  text-align:center;
+  color:#ffd54f;
+  margin:0 0 14px 0;
+}
+.galeria{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.card-foto{
+  background:#0f1524;
+  border:1px solid #294a7a;
+  border-radius:14px;
+  padding:12px;
+  box-shadow:0 0 14px rgba(0,0,0,.2);
+}
+.card-foto img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid #c62828;
+}
+.card-foto .meta{
+  margin-top:8px;
+  font-size:14px;
+  line-height:1.5;
+}
+.card-foto .meta strong{
+  color:#ffd54f;
+}
+.secao-pdf{
+  background:#0f1524;
+  border:1px solid #294a7a;
+  border-radius:16px;
+  padding:16px;
+  margin-top:24px;
+}
+.secao-pdf p{
+  margin:8px 0 0 0;
+  color:#d8e3ff;
+}
+#areaPDF{
+  margin-top:24px;
+}
+@media(max-width:768px){
+  .painel-topo{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff;color:#000;text-align:left}
+  header{background:#fff !important;color:#000;box-shadow:none;border-bottom:2px solid #000}
+  .container{background:#fff;box-shadow:none;border:none;width:100%;max-width:none;margin:0;padding:0}
+  .video-area,.botoes-camera,.botoes-secundarios,.preview-box,.rodape,.info-salvamento{display:none !important}
+  .card-info,.card-foto,table th,table td{background:#fff !important;color:#000 !important;border-color:#000 !important;box-shadow:none}
+  .card-foto img, td img{border-color:#000}
+  .historico-fotos h2,.historico-tabela h2,h1,.relogio,.card-info strong{color:#000 !important}
+  .galeria{grid-template-columns:repeat(2,1fr)}
+  .btn-excluir-item{display:none !important}
+  .table-wrap{overflow:visible}
+  table{min-width:0;font-size:12px}
+  .secao-pdf{border:1px solid #000;background:#fff}
+}
 </style>
 </head>
 <body>
-
 <header>
   <h1>Checklist de Ensaio com Foto do Figurino</h1>
   <div class="relogio" id="relogio">--/--/---- --:--:--</div>
 </header>
 
 <div class="container">
+  <div class="painel-topo">
+    <div class="card-info">Total de registros<br><strong id="totalRegistros">0</strong></div>
+    <div class="card-info">Fotos salvas<br><strong id="totalFotos">0</strong></div>
+    <div class="card-info">Salvamento<br><strong id="statusSalvamento">Ativo no navegador</strong></div>
+  </div>
 
   <div class="form-grid">
     <input type="text" id="nome" placeholder="Nome do dançarino">
@@ -226,6 +264,7 @@ td img{
     <video id="video" autoplay playsinline></video>
     <canvas id="canvas" style="display:none;"></canvas>
     <div class="info-camera" id="infoCamera">Câmera ativa: traseira</div>
+    <div class="info-salvamento">Tudo que for salvo ficará registrado mesmo ao fechar a página neste navegador.</div>
   </div>
 
   <div class="botoes-camera">
@@ -235,8 +274,11 @@ td img{
     <button class="btn-salvar" onclick="salvarRegistro()">✔ Salvar Registro</button>
   </div>
 
-  <div style="margin-top:10px;">
+  <div class="botoes-secundarios">
     <button class="btn-limpar" onclick="limparCampos()">🧹 Limpar Campos</button>
+    <button class="btn-exportar" onclick="exportarJSON()">⬇ Exportar Backup</button>
+    <button class="btn-pdf" onclick="gerarPDFHistorico()">🧾 Gerar PDF</button>
+    <button class="btn-apagar-tudo" onclick="apagarTudo()">🗑 Apagar Tudo</button>
   </div>
 
   <div class="preview-box">
@@ -244,103 +286,121 @@ td img{
     <img id="preview" src="" alt="Pré-visualização da foto">
   </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Sequência</th>
-          <th>Nome</th>
-          <th>Coreografia</th>
-          <th>Status Figurino</th>
-          <th>Data</th>
-          <th>Hora</th>
-          <th>Câmera</th>
-          <th>Foto</th>
-        </tr>
-      </thead>
-      <tbody id="listaRegistros"></tbody>
-    </table>
+  <div class="secao-pdf">
+    <strong>PDF do histórico completo</strong>
+    <p>O botão <b>Gerar PDF</b> abre a impressão da página com tabela e histórico de fotos. Depois é só escolher <b>Salvar como PDF</b>.</p>
   </div>
 
+  <div id="areaPDF">
+    <div class="historico-fotos">
+      <h2>Histórico de Fotos</h2>
+      <div class="galeria" id="galeriaFotos"></div>
+    </div>
+
+    <div class="historico-tabela">
+      <h2>Histórico Completo</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Sequência</th>
+              <th>Nome</th>
+              <th>Coreografia</th>
+              <th>Status Figurino</th>
+              <th>Data</th>
+              <th>Hora</th>
+              <th>Câmera</th>
+              <th>Foto</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="listaRegistros">
+            <tr><td colspan="9" class="vazio">Nenhum registro salvo ainda.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="rodape">
-  Sistema de checklist de ensaio com foto em tempo real
+  Sistema de checklist de ensaio com histórico de fotos, salvamento automático e PDF do histórico
 </div>
 
 <script>
+const CHAVE_STORAGE = "checklist_ensaio_figurino_registros_v3";
 let imagemAtual = "";
 let usandoFrontal = false;
 let streamAtual = null;
+let registros = [];
 
-// relógio
 function atualizarRelogio(){
   const agora = new Date();
-  const data = agora.toLocaleDateString("pt-BR");
-  const hora = agora.toLocaleTimeString("pt-BR");
-  document.getElementById("relogio").innerText = data + " " + hora;
+  document.getElementById("relogio").innerText = agora.toLocaleDateString("pt-BR") + " " + agora.toLocaleTimeString("pt-BR");
 }
 setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
 
-// iniciar câmera
+function salvarNoStorage(){
+  localStorage.setItem(CHAVE_STORAGE, JSON.stringify(registros));
+  atualizarTotais();
+}
+
+function carregarDoStorage(){
+  const dados = localStorage.getItem(CHAVE_STORAGE);
+  if(dados){
+    try{ registros = JSON.parse(dados) || []; }
+    catch(e){ registros = []; }
+  }
+  renderizarTudo();
+}
+
+function atualizarTotais(){
+  document.getElementById("totalRegistros").innerText = registros.length;
+  document.getElementById("totalFotos").innerText = registros.filter(r => !!r.foto).length;
+}
+
 async function iniciarCamera(){
   try{
     if(streamAtual){
       streamAtual.getTracks().forEach(track => track.stop());
     }
-
     const modo = usandoFrontal ? "user" : "environment";
-
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: modo },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      },
+      video: { facingMode: { ideal: modo }, width: { ideal: 1280 }, height: { ideal: 720 } },
       audio: false
     });
-
     streamAtual = stream;
     document.getElementById("video").srcObject = stream;
-    document.getElementById("infoCamera").innerText =
-      "Câmera ativa: " + (usandoFrontal ? "frontal" : "traseira");
+    document.getElementById("infoCamera").innerText = "Câmera ativa: " + (usandoFrontal ? "frontal" : "traseira");
   }catch(erro){
     alert("Não foi possível acessar a câmera. Verifique a permissão no navegador.");
     console.error(erro);
   }
 }
 
-// trocar câmera
 function trocarCamera(){
   usandoFrontal = !usandoFrontal;
   iniciarCamera();
 }
 
-// tirar foto
 function tirarFoto(){
   const video = document.getElementById("video");
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-
   if(video.videoWidth === 0 || video.videoHeight === 0){
     alert("A câmera ainda não está pronta.");
     return;
   }
-
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
-
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
   imagemAtual = canvas.toDataURL("image/png");
-
   const preview = document.getElementById("preview");
   preview.src = imagemAtual;
   preview.style.display = "inline-block";
 }
 
-// classes do status
 function classeFigurino(status){
   if(status === "Figurino OK") return "ok";
   if(status === "Ajustar Figurino") return "ajustar";
@@ -348,84 +408,144 @@ function classeFigurino(status){
   return "";
 }
 
-// salvar
 function salvarRegistro(){
   const nome = document.getElementById("nome").value.trim();
   const coreografia = document.getElementById("coreografia").value.trim();
   const sequencia = document.getElementById("sequencia").value.trim();
   const figurino = document.getElementById("figurino").value;
 
-  if(nome === ""){
-    alert("Digite o nome do dançarino.");
-    return;
-  }
-
-  if(coreografia === ""){
-    alert("Digite o nome da coreografia.");
-    return;
-  }
-
-  if(sequencia === ""){
-    alert("Digite a sequência.");
-    return;
-  }
-
-  if(imagemAtual === ""){
-    alert("Tire a foto antes de salvar.");
-    return;
-  }
+  if(nome === ""){ alert("Digite o nome do dançarino."); return; }
+  if(coreografia === ""){ alert("Digite o nome da coreografia."); return; }
+  if(sequencia === ""){ alert("Digite a sequência."); return; }
+  if(imagemAtual === ""){ alert("Tire a foto antes de salvar."); return; }
 
   const agora = new Date();
-  const data = agora.toLocaleDateString("pt-BR");
-  const hora = agora.toLocaleTimeString("pt-BR");
-  const cameraUsada = usandoFrontal ? "Frontal" : "Traseira";
+  registros.push({
+    id: Date.now(),
+    sequencia,
+    nome,
+    coreografia,
+    figurino,
+    data: agora.toLocaleDateString("pt-BR"),
+    hora: agora.toLocaleTimeString("pt-BR"),
+    cameraUsada: usandoFrontal ? "Frontal" : "Traseira",
+    foto: imagemAtual
+  });
 
-  const tabela = document.getElementById("listaRegistros");
-
-  const linha = document.createElement("tr");
-  linha.innerHTML = `
-    <td>${sequencia}</td>
-    <td>${nome}</td>
-    <td>${coreografia}</td>
-    <td class="${classeFigurino(figurino)}">${figurino}</td>
-    <td>${data}</td>
-    <td>${hora}</td>
-    <td>${cameraUsada}</td>
-    <td><img src="${imagemAtual}" alt="Foto do figurino"></td>
-  `;
-
-  tabela.appendChild(linha);
-
-  imagemAtual = "";
-  const preview = document.getElementById("preview");
-  preview.src = "";
-  preview.style.display = "none";
-
-  document.getElementById("nome").value = "";
-  document.getElementById("coreografia").value = "";
-  document.getElementById("sequencia").value = "";
-  document.getElementById("figurino").selectedIndex = 0;
-
-  alert("Registro salvo com sucesso.");
+  salvarNoStorage();
+  renderizarTudo();
+  limparCampos();
+  alert("Registro salvo com sucesso no histórico.");
 }
 
-// limpar
+function obterOrdenados(){
+  return [...registros].sort((a,b) => {
+    const sa = Number(a.sequencia) || 0;
+    const sb = Number(b.sequencia) || 0;
+    if(sa !== sb) return sa - sb;
+    return a.id - b.id;
+  });
+}
+
+function renderizarTabela(){
+  const tabela = document.getElementById("listaRegistros");
+  if(registros.length === 0){
+    tabela.innerHTML = '<tr><td colspan="9" class="vazio">Nenhum registro salvo ainda.</td></tr>';
+    return;
+  }
+  tabela.innerHTML = obterOrdenados().map(registro => `
+    <tr>
+      <td>${registro.sequencia}</td>
+      <td>${registro.nome}</td>
+      <td>${registro.coreografia}</td>
+      <td class="${classeFigurino(registro.figurino)}">${registro.figurino}</td>
+      <td>${registro.data}</td>
+      <td>${registro.hora}</td>
+      <td>${registro.cameraUsada}</td>
+      <td><img src="${registro.foto}" alt="Foto do figurino"></td>
+      <td><div class="acoes-linha"><button class="btn-excluir-item" onclick="excluirRegistro(${registro.id})">Excluir</button></div></td>
+    </tr>
+  `).join("");
+}
+
+function renderizarGaleria(){
+  const galeria = document.getElementById("galeriaFotos");
+  if(registros.length === 0){
+    galeria.innerHTML = '<div class="vazio">Nenhuma foto salva ainda.</div>';
+    return;
+  }
+  galeria.innerHTML = obterOrdenados().map(registro => `
+    <div class="card-foto">
+      <img src="${registro.foto}" alt="${registro.nome}">
+      <div class="meta">
+        <div><strong>Seq. ${registro.sequencia}</strong> — ${registro.nome}</div>
+        <div>${registro.coreografia}</div>
+        <div class="${classeFigurino(registro.figurino)}">${registro.figurino}</div>
+        <div>${registro.data} • ${registro.hora}</div>
+        <div>Câmera: ${registro.cameraUsada}</div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function renderizarTudo(){
+  renderizarTabela();
+  renderizarGaleria();
+  atualizarTotais();
+}
+
+function excluirRegistro(id){
+  if(!confirm("Deseja excluir este registro?")) return;
+  registros = registros.filter(item => item.id !== id);
+  salvarNoStorage();
+  renderizarTudo();
+}
+
+function apagarTudo(){
+  if(!confirm("Tem certeza que deseja apagar todos os registros salvos?")) return;
+  registros = [];
+  localStorage.removeItem(CHAVE_STORAGE);
+  renderizarTudo();
+  alert("Todos os registros foram apagados.");
+}
+
+function exportarJSON(){
+  if(registros.length === 0){ alert("Não há registros para exportar."); return; }
+  const blob = new Blob([JSON.stringify(registros, null, 2)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "backup-checklist-ensaio-historico.json";
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function gerarPDFHistorico(){
+  if(registros.length === 0){
+    alert("Não há histórico para gerar PDF.");
+    return;
+  }
+  window.print();
+}
+
 function limparCampos(){
   document.getElementById("nome").value = "";
   document.getElementById("coreografia").value = "";
   document.getElementById("sequencia").value = "";
   document.getElementById("figurino").selectedIndex = 0;
-
   imagemAtual = "";
   const preview = document.getElementById("preview");
   preview.src = "";
   preview.style.display = "none";
 }
 
-// iniciar automaticamente já na traseira
+window.addEventListener("beforeunload", () => {
+  if(streamAtual){
+    streamAtual.getTracks().forEach(track => track.stop());
+  }
+});
+
+carregarDoStorage();
 iniciarCamera();
 </script>
-<hr>
-<a href="index01.html"><h2>Checklist de Ensaio - Controle de Figurino</h2></a>
 </body>
 </html>
