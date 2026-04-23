@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checklist de Ensaio com Foto</title>
+<title>Checklist de Ensaio com Foto do Figurino</title>
 
 <style>
 *{
@@ -12,16 +12,16 @@
 
 body{
   margin:0;
-  background:#0b0b0b;
-  color:#fff;
   font-family:Arial, sans-serif;
+  background:#0b0f1a;
+  color:#ffffff;
   text-align:center;
 }
 
 header{
-  background:linear-gradient(90deg,#0d47a1,#b71c1c);
-  padding:20px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.4);
+  background:linear-gradient(90deg,#0d47a1,#c62828);
+  padding:20px 10px;
+  box-shadow:0 2px 12px rgba(0,0,0,0.4);
 }
 
 h1{
@@ -38,31 +38,42 @@ h1{
 
 .container{
   width:95%;
-  max-width:900px;
+  max-width:1000px;
   margin:20px auto;
-  background:#151515;
+  background:#151b2c;
+  border-radius:16px;
   padding:20px;
-  border-radius:14px;
-  box-shadow:0 0 15px rgba(0,0,0,0.35);
+  box-shadow:0 0 18px rgba(0,0,0,0.35);
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+@media(max-width:768px){
+  .form-grid{
+    grid-template-columns:1fr;
+  }
 }
 
 input, select, button{
   width:100%;
   padding:12px;
-  margin:8px 0;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   font-size:16px;
 }
 
 input, select{
-  background:#222;
+  background:#0f1524;
   color:#fff;
+  border:1px solid #294a7a;
 }
 
 button{
-  background:#1976d2;
-  color:#fff;
+  color:white;
   font-weight:bold;
   cursor:pointer;
   transition:0.2s;
@@ -72,8 +83,16 @@ button:hover{
   transform:scale(1.02);
 }
 
+.btn-camera{
+  background:#1565c0;
+}
+
+.btn-trocar{
+  background:#8e24aa;
+}
+
 .btn-foto{
-  background:#c62828;
+  background:#d32f2f;
 }
 
 .btn-salvar{
@@ -84,39 +103,56 @@ button:hover{
   background:#ef6c00;
 }
 
+.video-area{
+  margin-top:20px;
+}
+
 video, canvas{
   width:100%;
-  max-width:420px;
-  border-radius:12px;
-  margin-top:10px;
-  border:3px solid #1976d2;
+  max-width:460px;
   background:#000;
+  border-radius:14px;
+  border:3px solid #1976d2;
+}
+
+.botoes-camera{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:15px;
+}
+
+@media(max-width:768px){
+  .botoes-camera{
+    grid-template-columns:1fr 1fr;
+  }
 }
 
 .preview-box{
-  margin-top:15px;
+  margin-top:20px;
 }
 
 .preview-box img{
   width:100%;
-  max-width:240px;
-  border-radius:10px;
-  border:3px solid #b71c1c;
+  max-width:260px;
+  border-radius:12px;
+  border:3px solid #c62828;
+  display:none;
 }
 
 .table-wrap{
   overflow-x:auto;
-  margin-top:20px;
+  margin-top:25px;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
-  min-width:900px;
+  min-width:950px;
 }
 
 th, td{
-  border:1px solid #333;
+  border:1px solid #2f3a52;
   padding:10px;
   text-align:center;
   vertical-align:middle;
@@ -128,13 +164,13 @@ th{
 }
 
 td{
-  background:#1b1b1b;
+  background:#111827;
 }
 
 td img{
   width:90px;
   border-radius:8px;
-  border:2px solid #b71c1c;
+  border:2px solid #c62828;
 }
 
 .ok{
@@ -152,9 +188,16 @@ td img{
   font-weight:bold;
 }
 
+.info-camera{
+  margin-top:10px;
+  font-size:14px;
+  color:#90caf9;
+  font-weight:bold;
+}
+
 .rodape{
-  margin:25px 0;
-  color:#aaa;
+  margin:30px 0;
+  color:#aab4c4;
   font-size:14px;
 }
 </style>
@@ -162,32 +205,43 @@ td img{
 <body>
 
 <header>
-  <h1>Checklist de Ensaio com Foto em Tempo Real</h1>
+  <h1>Checklist de Ensaio com Foto do Figurino</h1>
   <div class="relogio" id="relogio">--/--/---- --:--:--</div>
 </header>
 
 <div class="container">
 
-  <input type="text" id="nome" placeholder="Nome do dançarino">
-  <input type="text" id="coreografia" placeholder="Nome da coreografia">
-  <input type="number" id="sequencia" placeholder="Sequência do show">
+  <div class="form-grid">
+    <input type="text" id="nome" placeholder="Nome do dançarino">
+    <input type="text" id="coreografia" placeholder="Nome da coreografia">
+    <input type="number" id="sequencia" placeholder="Sequência do show">
+    <select id="figurino">
+      <option value="Figurino OK">Figurino OK</option>
+      <option value="Ajustar Figurino">Ajustar Figurino</option>
+      <option value="Trocar Figurino">Trocar Figurino</option>
+    </select>
+  </div>
 
-  <select id="figurino">
-    <option value="Figurino OK">Figurino OK</option>
-    <option value="Ajustar Figurino">Ajustar Figurino</option>
-    <option value="Trocar Figurino">Trocar Figurino</option>
-  </select>
+  <div class="video-area">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <div class="info-camera" id="infoCamera">Câmera ativa: traseira</div>
+  </div>
 
-  <video id="video" autoplay playsinline></video>
-  <canvas id="canvas" style="display:none;"></canvas>
+  <div class="botoes-camera">
+    <button class="btn-camera" onclick="iniciarCamera()">📷 Iniciar Câmera</button>
+    <button class="btn-trocar" onclick="trocarCamera()">🔄 Trocar Câmera</button>
+    <button class="btn-foto" onclick="tirarFoto()">📸 Tirar Foto</button>
+    <button class="btn-salvar" onclick="salvarRegistro()">✔ Salvar Registro</button>
+  </div>
 
-  <button class="btn-foto" onclick="tirarFoto()">📸 Tirar Foto</button>
-  <button class="btn-salvar" onclick="salvarRegistro()">✔ Salvar Registro</button>
-  <button class="btn-limpar" onclick="limparCampos()">🧹 Limpar Campos</button>
+  <div style="margin-top:10px;">
+    <button class="btn-limpar" onclick="limparCampos()">🧹 Limpar Campos</button>
+  </div>
 
   <div class="preview-box">
     <h3>Pré-visualização da foto</h3>
-    <img id="preview" src="" alt="" style="display:none;">
+    <img id="preview" src="" alt="Pré-visualização da foto">
   </div>
 
   <div class="table-wrap">
@@ -200,6 +254,7 @@ td img{
           <th>Status Figurino</th>
           <th>Data</th>
           <th>Hora</th>
+          <th>Câmera</th>
           <th>Foto</th>
         </tr>
       </thead>
@@ -210,35 +265,59 @@ td img{
 </div>
 
 <div class="rodape">
-  Sistema de checklist de ensaio com câmera frontal e registro em tempo real
+  Sistema de checklist de ensaio com foto em tempo real
 </div>
 
 <script>
 let imagemAtual = "";
+let usandoFrontal = false;
+let streamAtual = null;
 
+// relógio
 function atualizarRelogio(){
   const agora = new Date();
-  const data = agora.toLocaleDateString('pt-BR');
-  const hora = agora.toLocaleTimeString('pt-BR');
+  const data = agora.toLocaleDateString("pt-BR");
+  const hora = agora.toLocaleTimeString("pt-BR");
   document.getElementById("relogio").innerText = data + " " + hora;
 }
 setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
 
-async function iniciarCameraFrontal(){
+// iniciar câmera
+async function iniciarCamera(){
   try{
+    if(streamAtual){
+      streamAtual.getTracks().forEach(track => track.stop());
+    }
+
+    const modo = usandoFrontal ? "user" : "environment";
+
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: "user" },
+      video: {
+        facingMode: { ideal: modo },
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      },
       audio: false
     });
+
+    streamAtual = stream;
     document.getElementById("video").srcObject = stream;
+    document.getElementById("infoCamera").innerText =
+      "Câmera ativa: " + (usandoFrontal ? "frontal" : "traseira");
   }catch(erro){
-    alert("Não foi possível acessar a câmera frontal. Verifique a permissão da câmera.");
+    alert("Não foi possível acessar a câmera. Verifique a permissão no navegador.");
     console.error(erro);
   }
 }
-iniciarCameraFrontal();
 
+// trocar câmera
+function trocarCamera(){
+  usandoFrontal = !usandoFrontal;
+  iniciarCamera();
+}
+
+// tirar foto
 function tirarFoto(){
   const video = document.getElementById("video");
   const canvas = document.getElementById("canvas");
@@ -261,6 +340,7 @@ function tirarFoto(){
   preview.style.display = "inline-block";
 }
 
+// classes do status
 function classeFigurino(status){
   if(status === "Figurino OK") return "ok";
   if(status === "Ajustar Figurino") return "ajustar";
@@ -268,6 +348,7 @@ function classeFigurino(status){
   return "";
 }
 
+// salvar
 function salvarRegistro(){
   const nome = document.getElementById("nome").value.trim();
   const coreografia = document.getElementById("coreografia").value.trim();
@@ -297,6 +378,7 @@ function salvarRegistro(){
   const agora = new Date();
   const data = agora.toLocaleDateString("pt-BR");
   const hora = agora.toLocaleTimeString("pt-BR");
+  const cameraUsada = usandoFrontal ? "Frontal" : "Traseira";
 
   const tabela = document.getElementById("listaRegistros");
 
@@ -308,33 +390,40 @@ function salvarRegistro(){
     <td class="${classeFigurino(figurino)}">${figurino}</td>
     <td>${data}</td>
     <td>${hora}</td>
+    <td>${cameraUsada}</td>
     <td><img src="${imagemAtual}" alt="Foto do figurino"></td>
   `;
 
   tabela.appendChild(linha);
 
-  limparCampos(false);
-  alert("Registro salvo com sucesso.");
-}
+  imagemAtual = "";
+  const preview = document.getElementById("preview");
+  preview.src = "";
+  preview.style.display = "none";
 
-function limparCampos(limparFoto = true){
   document.getElementById("nome").value = "";
   document.getElementById("coreografia").value = "";
   document.getElementById("sequencia").value = "";
   document.getElementById("figurino").selectedIndex = 0;
 
-  if(limparFoto){
-    imagemAtual = "";
-    const preview = document.getElementById("preview");
-    preview.src = "";
-    preview.style.display = "none";
-  } else {
-    imagemAtual = "";
-    const preview = document.getElementById("preview");
-    preview.src = "";
-    preview.style.display = "none";
-  }
+  alert("Registro salvo com sucesso.");
 }
+
+// limpar
+function limparCampos(){
+  document.getElementById("nome").value = "";
+  document.getElementById("coreografia").value = "";
+  document.getElementById("sequencia").value = "";
+  document.getElementById("figurino").selectedIndex = 0;
+
+  imagemAtual = "";
+  const preview = document.getElementById("preview");
+  preview.src = "";
+  preview.style.display = "none";
+}
+
+// iniciar automaticamente já na traseira
+iniciarCamera();
 </script>
 
 </body>
