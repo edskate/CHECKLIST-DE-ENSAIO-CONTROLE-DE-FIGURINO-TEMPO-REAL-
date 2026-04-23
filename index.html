@@ -2,168 +2,339 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Checklist de Ensaio - Figurino</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist de Ensaio com Foto</title>
 
 <style>
+*{
+  box-sizing:border-box;
+}
+
 body{
-background:#0a0a0a;
-color:#fff;
-font-family:Arial;
-text-align:center;
+  margin:0;
+  background:#0b0b0b;
+  color:#fff;
+  font-family:Arial, sans-serif;
+  text-align:center;
+}
+
+header{
+  background:linear-gradient(90deg,#0d47a1,#b71c1c);
+  padding:20px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.4);
 }
 
 h1{
-color:#00c3ff;
+  margin:0;
+  font-size:28px;
+}
+
+.relogio{
+  margin-top:8px;
+  font-size:18px;
+  font-weight:bold;
+  color:#ffd54f;
 }
 
 .container{
-background:#111;
-padding:20px;
-margin:20px auto;
-width:95%;
-max-width:700px;
-border-radius:10px;
+  width:95%;
+  max-width:900px;
+  margin:20px auto;
+  background:#151515;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 0 15px rgba(0,0,0,0.35);
 }
 
 input, select, button{
-padding:10px;
-margin:5px;
-width:90%;
-border-radius:5px;
-border:none;
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border:none;
+  border-radius:8px;
+  font-size:16px;
+}
+
+input, select{
+  background:#222;
+  color:#fff;
 }
 
 button{
-background:#00c3ff;
-font-weight:bold;
-cursor:pointer;
+  background:#1976d2;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:scale(1.02);
+}
+
+.btn-foto{
+  background:#c62828;
+}
+
+.btn-salvar{
+  background:#2e7d32;
+}
+
+.btn-limpar{
+  background:#ef6c00;
 }
 
 video, canvas{
-width:90%;
-margin-top:10px;
-border-radius:10px;
+  width:100%;
+  max-width:420px;
+  border-radius:12px;
+  margin-top:10px;
+  border:3px solid #1976d2;
+  background:#000;
+}
+
+.preview-box{
+  margin-top:15px;
+}
+
+.preview-box img{
+  width:100%;
+  max-width:240px;
+  border-radius:10px;
+  border:3px solid #b71c1c;
+}
+
+.table-wrap{
+  overflow-x:auto;
+  margin-top:20px;
 }
 
 table{
-width:95%;
-margin:auto;
-margin-top:20px;
-border-collapse:collapse;
+  width:100%;
+  border-collapse:collapse;
+  min-width:900px;
 }
 
 th, td{
-border:1px solid #00c3ff;
-padding:8px;
+  border:1px solid #333;
+  padding:10px;
+  text-align:center;
+  vertical-align:middle;
 }
 
-img{
-width:80px;
-border-radius:5px;
+th{
+  background:#0d47a1;
+  color:#fff;
 }
 
-.ok{color:#00ff88;}
+td{
+  background:#1b1b1b;
+}
+
+td img{
+  width:90px;
+  border-radius:8px;
+  border:2px solid #b71c1c;
+}
+
+.ok{
+  color:#66bb6a;
+  font-weight:bold;
+}
+
+.ajustar{
+  color:#ffca28;
+  font-weight:bold;
+}
+
+.trocar{
+  color:#ef5350;
+  font-weight:bold;
+}
+
+.rodape{
+  margin:25px 0;
+  color:#aaa;
+  font-size:14px;
+}
 </style>
 </head>
-
 <body>
 
-<h1>🎭 Checklist Figurino - Ensaio</h1>
+<header>
+  <h1>Checklist de Ensaio com Foto em Tempo Real</h1>
+  <div class="relogio" id="relogio">--/--/---- --:--:--</div>
+</header>
 
 <div class="container">
 
-<input id="nome" placeholder="Nome do Dançarino">
+  <input type="text" id="nome" placeholder="Nome do dançarino">
+  <input type="text" id="coreografia" placeholder="Nome da coreografia">
+  <input type="number" id="sequencia" placeholder="Sequência do show">
 
-<input id="coreo" placeholder="Nome da Coreografia">
+  <select id="figurino">
+    <option value="Figurino OK">Figurino OK</option>
+    <option value="Ajustar Figurino">Ajustar Figurino</option>
+    <option value="Trocar Figurino">Trocar Figurino</option>
+  </select>
 
-<input id="sequencia" type="number" placeholder="Sequência do Show">
+  <video id="video" autoplay playsinline></video>
+  <canvas id="canvas" style="display:none;"></canvas>
 
-<select id="figurino">
-<option>Figurino OK</option>
-<option>Ajustar</option>
-<option>Trocar</option>
-</select>
+  <button class="btn-foto" onclick="tirarFoto()">📸 Tirar Foto</button>
+  <button class="btn-salvar" onclick="salvarRegistro()">✔ Salvar Registro</button>
+  <button class="btn-limpar" onclick="limparCampos()">🧹 Limpar Campos</button>
 
-<br>
+  <div class="preview-box">
+    <h3>Pré-visualização da foto</h3>
+    <img id="preview" src="" alt="" style="display:none;">
+  </div>
 
-<video id="video" autoplay></video>
-<br>
-<button onclick="tirarFoto()">📸 Tirar Foto</button>
-
-<canvas id="canvas" style="display:none;"></canvas>
-
-<br>
-<button onclick="salvar()">✔️ Salvar Registro</button>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Sequência</th>
+          <th>Nome</th>
+          <th>Coreografia</th>
+          <th>Status Figurino</th>
+          <th>Data</th>
+          <th>Hora</th>
+          <th>Foto</th>
+        </tr>
+      </thead>
+      <tbody id="listaRegistros"></tbody>
+    </table>
+  </div>
 
 </div>
 
-<table>
-<thead>
-<tr>
-<th>Seq</th>
-<th>Nome</th>
-<th>Coreografia</th>
-<th>Figurino</th>
-<th>Hora</th>
-<th>Foto</th>
-</tr>
-</thead>
-<tbody id="lista"></tbody>
-</table>
+<div class="rodape">
+  Sistema de checklist de ensaio com câmera frontal e registro em tempo real
+</div>
 
 <script>
-
 let imagemAtual = "";
 
-navigator.mediaDevices.getUserMedia({ video: true })
-.then(stream => {
-document.getElementById('video').srcObject = stream;
-});
+function atualizarRelogio(){
+  const agora = new Date();
+  const data = agora.toLocaleDateString('pt-BR');
+  const hora = agora.toLocaleTimeString('pt-BR');
+  document.getElementById("relogio").innerText = data + " " + hora;
+}
+setInterval(atualizarRelogio, 1000);
+atualizarRelogio();
+
+async function iniciarCameraFrontal(){
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: false
+    });
+    document.getElementById("video").srcObject = stream;
+  }catch(erro){
+    alert("Não foi possível acessar a câmera frontal. Verifique a permissão da câmera.");
+    console.error(erro);
+  }
+}
+iniciarCameraFrontal();
 
 function tirarFoto(){
-let video = document.getElementById('video');
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext('2d');
+  const video = document.getElementById("video");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
 
-canvas.width = video.videoWidth;
-canvas.height = video.videoHeight;
+  if(video.videoWidth === 0 || video.videoHeight === 0){
+    alert("A câmera ainda não está pronta.");
+    return;
+  }
 
-ctx.drawImage(video, 0, 0);
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
 
-imagemAtual = canvas.toDataURL("image/png");
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  imagemAtual = canvas.toDataURL("image/png");
+
+  const preview = document.getElementById("preview");
+  preview.src = imagemAtual;
+  preview.style.display = "inline-block";
 }
 
-function salvar(){
-
-let nome = document.getElementById('nome').value;
-let coreo = document.getElementById('coreo').value;
-let seq = document.getElementById('sequencia').value;
-let figurino = document.getElementById('figurino').value;
-
-if(!imagemAtual){
-alert("Tire a foto primeiro!");
-return;
+function classeFigurino(status){
+  if(status === "Figurino OK") return "ok";
+  if(status === "Ajustar Figurino") return "ajustar";
+  if(status === "Trocar Figurino") return "trocar";
+  return "";
 }
 
-let hora = new Date().toLocaleTimeString();
+function salvarRegistro(){
+  const nome = document.getElementById("nome").value.trim();
+  const coreografia = document.getElementById("coreografia").value.trim();
+  const sequencia = document.getElementById("sequencia").value.trim();
+  const figurino = document.getElementById("figurino").value;
 
-let linha = `
-<tr>
-<td>${seq}</td>
-<td>${nome}</td>
-<td>${coreo}</td>
-<td class="ok">${figurino}</td>
-<td>${hora}</td>
-<td><img src="${imagemAtual}"></td>
-</tr>
-`;
+  if(nome === ""){
+    alert("Digite o nome do dançarino.");
+    return;
+  }
 
-document.getElementById('lista').innerHTML += linha;
+  if(coreografia === ""){
+    alert("Digite o nome da coreografia.");
+    return;
+  }
 
-imagemAtual = "";
+  if(sequencia === ""){
+    alert("Digite a sequência.");
+    return;
+  }
 
+  if(imagemAtual === ""){
+    alert("Tire a foto antes de salvar.");
+    return;
+  }
+
+  const agora = new Date();
+  const data = agora.toLocaleDateString("pt-BR");
+  const hora = agora.toLocaleTimeString("pt-BR");
+
+  const tabela = document.getElementById("listaRegistros");
+
+  const linha = document.createElement("tr");
+  linha.innerHTML = `
+    <td>${sequencia}</td>
+    <td>${nome}</td>
+    <td>${coreografia}</td>
+    <td class="${classeFigurino(figurino)}">${figurino}</td>
+    <td>${data}</td>
+    <td>${hora}</td>
+    <td><img src="${imagemAtual}" alt="Foto do figurino"></td>
+  `;
+
+  tabela.appendChild(linha);
+
+  limparCampos(false);
+  alert("Registro salvo com sucesso.");
 }
 
+function limparCampos(limparFoto = true){
+  document.getElementById("nome").value = "";
+  document.getElementById("coreografia").value = "";
+  document.getElementById("sequencia").value = "";
+  document.getElementById("figurino").selectedIndex = 0;
+
+  if(limparFoto){
+    imagemAtual = "";
+    const preview = document.getElementById("preview");
+    preview.src = "";
+    preview.style.display = "none";
+  } else {
+    imagemAtual = "";
+    const preview = document.getElementById("preview");
+    preview.src = "";
+    preview.style.display = "none";
+  }
+}
 </script>
 
 </body>
