@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0d47a1">
 <title>Checklist de Ensaio com Histórico e PDF</title>
 <style>
 *{box-sizing:border-box}
@@ -218,7 +219,134 @@ td img{
   margin-top:24px;
 }
 @media(max-width:768px){
-  .painel-topo{grid-template-columns:1fr}
+  body{
+    text-align:left;
+  }
+  header{
+    padding:16px 12px;
+  }
+  h1{
+    font-size:22px;
+    text-align:center;
+    line-height:1.2;
+  }
+  .relogio{
+    font-size:16px;
+    text-align:center;
+  }
+  .container{
+    width:100%;
+    margin:0;
+    border-radius:0;
+    padding:14px;
+  }
+  .painel-topo{
+    grid-template-columns:1fr;
+  }
+  .card-info{
+    text-align:center;
+    padding:12px;
+  }
+  .card-info strong{
+    font-size:18px;
+  }
+  .form-grid{
+    grid-template-columns:1fr;
+    gap:10px;
+  }
+  input,select,button{
+    font-size:16px;
+    min-height:50px;
+  }
+  .video-area{
+    margin-top:16px;
+  }
+  video,canvas{
+    max-width:none;
+    width:100%;
+    border-width:2px;
+  }
+  .botoes-camera,
+  .botoes-secundarios{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .preview-box{
+    margin-top:16px;
+    text-align:center;
+  }
+  .preview-box h3{
+    font-size:18px;
+    margin-bottom:10px;
+  }
+  .preview-box img{
+    max-width:100%;
+  }
+  .secao-pdf{
+    padding:14px;
+    margin-top:18px;
+    text-align:left;
+  }
+  .historico-fotos,
+  .historico-tabela{
+    margin-top:20px;
+  }
+  .historico-fotos h2,
+  .historico-tabela h2{
+    font-size:20px;
+  }
+  .galeria{
+    grid-template-columns:1fr;
+    gap:12px;
+  }
+  .card-foto{
+    padding:10px;
+  }
+  .card-foto img{
+    height:auto;
+    max-height:420px;
+    object-fit:contain;
+    background:#000;
+  }
+  .card-foto .meta{
+    font-size:15px;
+  }
+  .table-wrap{
+    -webkit-overflow-scrolling:touch;
+    border:1px solid #294a7a;
+    border-radius:12px;
+  }
+  table{
+    min-width:980px;
+    font-size:14px;
+  }
+  th,td{
+    padding:8px;
+  }
+  td img{
+    width:78px;
+  }
+  .rodape{
+    padding:0 14px 20px;
+    text-align:center;
+  }
+}
+@media(max-width:480px){
+  .botoes-camera,
+  .botoes-secundarios{
+    grid-template-columns:1fr;
+  }
+  h1{
+    font-size:20px;
+  }
+  .container{
+    padding:12px;
+  }
+  .secao-pdf p,
+  .info-camera,
+  .info-salvamento{
+    font-size:13px;
+  }
 }
 @media print{
   body{background:#fff;color:#000;text-align:left}
