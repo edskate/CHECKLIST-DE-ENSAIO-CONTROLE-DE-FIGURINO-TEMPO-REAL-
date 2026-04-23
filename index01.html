@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Checklist de Ensaio com Salvamento</title>
+<title>Checklist de Ensaio com Histórico e PDF</title>
 <style>
 *{box-sizing:border-box}
 body{
@@ -27,7 +27,7 @@ h1{margin:0;font-size:28px}
 }
 .container{
   width:95%;
-  max-width:1100px;
+  max-width:1200px;
   margin:20px auto;
   background:#151b2c;
   border-radius:16px;
@@ -66,6 +66,7 @@ button:hover{transform:scale(1.02)}
 .btn-limpar{background:#ef6c00}
 .btn-apagar-tudo{background:#8b0000}
 .btn-exportar{background:#00897b}
+.btn-pdf{background:#6a1b9a}
 .video-area{margin-top:20px}
 video,canvas{
   width:100%;
@@ -82,7 +83,7 @@ video,canvas{
 }
 .botoes-secundarios{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
+  grid-template-columns:repeat(4,1fr);
   gap:10px;
   margin-top:10px;
 }
@@ -130,7 +131,7 @@ td img{
 }
 .painel-topo{
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:repeat(3,1fr);
   gap:12px;
   margin-bottom:16px;
 }
@@ -165,22 +166,86 @@ td img{
   color:#9fb3d9;
   padding:18px;
 }
+.historico-fotos{
+  margin-top:28px;
+  text-align:left;
+}
+.historico-fotos h2,
+.historico-tabela h2{
+  text-align:center;
+  color:#ffd54f;
+  margin:0 0 14px 0;
+}
+.galeria{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px;
+}
+.card-foto{
+  background:#0f1524;
+  border:1px solid #294a7a;
+  border-radius:14px;
+  padding:12px;
+  box-shadow:0 0 14px rgba(0,0,0,.2);
+}
+.card-foto img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid #c62828;
+}
+.card-foto .meta{
+  margin-top:8px;
+  font-size:14px;
+  line-height:1.5;
+}
+.card-foto .meta strong{
+  color:#ffd54f;
+}
+.secao-pdf{
+  background:#0f1524;
+  border:1px solid #294a7a;
+  border-radius:16px;
+  padding:16px;
+  margin-top:24px;
+}
+.secao-pdf p{
+  margin:8px 0 0 0;
+  color:#d8e3ff;
+}
+#areaPDF{
+  margin-top:24px;
+}
 @media(max-width:768px){
   .painel-topo{grid-template-columns:1fr}
+}
+@media print{
+  body{background:#fff;color:#000;text-align:left}
+  header{background:#fff !important;color:#000;box-shadow:none;border-bottom:2px solid #000}
+  .container{background:#fff;box-shadow:none;border:none;width:100%;max-width:none;margin:0;padding:0}
+  .video-area,.botoes-camera,.botoes-secundarios,.preview-box,.rodape,.info-salvamento{display:none !important}
+  .card-info,.card-foto,table th,table td{background:#fff !important;color:#000 !important;border-color:#000 !important;box-shadow:none}
+  .card-foto img, td img{border-color:#000}
+  .historico-fotos h2,.historico-tabela h2,h1,.relogio,.card-info strong{color:#000 !important}
+  .galeria{grid-template-columns:repeat(2,1fr)}
+  .btn-excluir-item{display:none !important}
+  .table-wrap{overflow:visible}
+  table{min-width:0;font-size:12px}
+  .secao-pdf{border:1px solid #000;background:#fff}
 }
 </style>
 </head>
 <body>
-
 <header>
   <h1>Checklist de Ensaio com Foto do Figurino</h1>
   <div class="relogio" id="relogio">--/--/---- --:--:--</div>
 </header>
 
 <div class="container">
-
   <div class="painel-topo">
     <div class="card-info">Total de registros<br><strong id="totalRegistros">0</strong></div>
+    <div class="card-info">Fotos salvas<br><strong id="totalFotos">0</strong></div>
     <div class="card-info">Salvamento<br><strong id="statusSalvamento">Ativo no navegador</strong></div>
   </div>
 
@@ -212,6 +277,7 @@ td img{
   <div class="botoes-secundarios">
     <button class="btn-limpar" onclick="limparCampos()">🧹 Limpar Campos</button>
     <button class="btn-exportar" onclick="exportarJSON()">⬇ Exportar Backup</button>
+    <button class="btn-pdf" onclick="gerarPDFHistorico()">🧾 Gerar PDF</button>
     <button class="btn-apagar-tudo" onclick="apagarTudo()">🗑 Apagar Tudo</button>
   </div>
 
@@ -220,51 +286,61 @@ td img{
     <img id="preview" src="" alt="Pré-visualização da foto">
   </div>
 
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Sequência</th>
-          <th>Nome</th>
-          <th>Coreografia</th>
-          <th>Status Figurino</th>
-          <th>Data</th>
-          <th>Hora</th>
-          <th>Câmera</th>
-          <th>Foto</th>
-          <th>Ação</th>
-        </tr>
-      </thead>
-      <tbody id="listaRegistros">
-        <tr><td colspan="9" class="vazio">Nenhum registro salvo ainda.</td></tr>
-      </tbody>
-    </table>
+  <div class="secao-pdf">
+    <strong>PDF do histórico completo</strong>
+    <p>O botão <b>Gerar PDF</b> abre a impressão da página com tabela e histórico de fotos. Depois é só escolher <b>Salvar como PDF</b>.</p>
   </div>
 
+  <div id="areaPDF">
+    <div class="historico-fotos">
+      <h2>Histórico de Fotos</h2>
+      <div class="galeria" id="galeriaFotos"></div>
+    </div>
+
+    <div class="historico-tabela">
+      <h2>Histórico Completo</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Sequência</th>
+              <th>Nome</th>
+              <th>Coreografia</th>
+              <th>Status Figurino</th>
+              <th>Data</th>
+              <th>Hora</th>
+              <th>Câmera</th>
+              <th>Foto</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="listaRegistros">
+            <tr><td colspan="9" class="vazio">Nenhum registro salvo ainda.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="rodape">
-  Sistema de checklist de ensaio com foto em tempo real e salvamento automático
+  Sistema de checklist de ensaio com histórico de fotos, salvamento automático e PDF do histórico
 </div>
 
 <script>
-const CHAVE_STORAGE = "checklist_ensaio_figurino_registros_v2";
+const CHAVE_STORAGE = "checklist_ensaio_figurino_registros_v3";
 let imagemAtual = "";
 let usandoFrontal = false;
 let streamAtual = null;
 let registros = [];
 
-// relógio
 function atualizarRelogio(){
   const agora = new Date();
-  const data = agora.toLocaleDateString("pt-BR");
-  const hora = agora.toLocaleTimeString("pt-BR");
-  document.getElementById("relogio").innerText = data + " " + hora;
+  document.getElementById("relogio").innerText = agora.toLocaleDateString("pt-BR") + " " + agora.toLocaleTimeString("pt-BR");
 }
 setInterval(atualizarRelogio, 1000);
 atualizarRelogio();
 
-// storage
 function salvarNoStorage(){
   localStorage.setItem(CHAVE_STORAGE, JSON.stringify(registros));
   atualizarTotais();
@@ -273,42 +349,30 @@ function salvarNoStorage(){
 function carregarDoStorage(){
   const dados = localStorage.getItem(CHAVE_STORAGE);
   if(dados){
-    try{
-      registros = JSON.parse(dados) || [];
-    }catch(e){
-      registros = [];
-    }
+    try{ registros = JSON.parse(dados) || []; }
+    catch(e){ registros = []; }
   }
-  renderizarTabela();
-  atualizarTotais();
+  renderizarTudo();
 }
 
 function atualizarTotais(){
   document.getElementById("totalRegistros").innerText = registros.length;
+  document.getElementById("totalFotos").innerText = registros.filter(r => !!r.foto).length;
 }
 
-// câmera
 async function iniciarCamera(){
   try{
     if(streamAtual){
       streamAtual.getTracks().forEach(track => track.stop());
     }
-
     const modo = usandoFrontal ? "user" : "environment";
-
     const stream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: { ideal: modo },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
-      },
+      video: { facingMode: { ideal: modo }, width: { ideal: 1280 }, height: { ideal: 720 } },
       audio: false
     });
-
     streamAtual = stream;
     document.getElementById("video").srcObject = stream;
-    document.getElementById("infoCamera").innerText =
-      "Câmera ativa: " + (usandoFrontal ? "frontal" : "traseira");
+    document.getElementById("infoCamera").innerText = "Câmera ativa: " + (usandoFrontal ? "frontal" : "traseira");
   }catch(erro){
     alert("Não foi possível acessar a câmera. Verifique a permissão no navegador.");
     console.error(erro);
@@ -324,18 +388,14 @@ function tirarFoto(){
   const video = document.getElementById("video");
   const canvas = document.getElementById("canvas");
   const ctx = canvas.getContext("2d");
-
   if(video.videoWidth === 0 || video.videoHeight === 0){
     alert("A câmera ainda não está pronta.");
     return;
   }
-
   canvas.width = video.videoWidth;
   canvas.height = video.videoHeight;
   ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
   imagemAtual = canvas.toDataURL("image/png");
-
   const preview = document.getElementById("preview");
   preview.src = imagemAtual;
   preview.style.display = "inline-block";
@@ -354,59 +414,46 @@ function salvarRegistro(){
   const sequencia = document.getElementById("sequencia").value.trim();
   const figurino = document.getElementById("figurino").value;
 
-  if(nome === ""){
-    alert("Digite o nome do dançarino.");
-    return;
-  }
-  if(coreografia === ""){
-    alert("Digite o nome da coreografia.");
-    return;
-  }
-  if(sequencia === ""){
-    alert("Digite a sequência.");
-    return;
-  }
-  if(imagemAtual === ""){
-    alert("Tire a foto antes de salvar.");
-    return;
-  }
+  if(nome === ""){ alert("Digite o nome do dançarino."); return; }
+  if(coreografia === ""){ alert("Digite o nome da coreografia."); return; }
+  if(sequencia === ""){ alert("Digite a sequência."); return; }
+  if(imagemAtual === ""){ alert("Tire a foto antes de salvar."); return; }
 
   const agora = new Date();
-  const data = agora.toLocaleDateString("pt-BR");
-  const hora = agora.toLocaleTimeString("pt-BR");
-  const cameraUsada = usandoFrontal ? "Frontal" : "Traseira";
-
-  const novoRegistro = {
+  registros.push({
     id: Date.now(),
     sequencia,
     nome,
     coreografia,
     figurino,
-    data,
-    hora,
-    cameraUsada,
+    data: agora.toLocaleDateString("pt-BR"),
+    hora: agora.toLocaleTimeString("pt-BR"),
+    cameraUsada: usandoFrontal ? "Frontal" : "Traseira",
     foto: imagemAtual
-  };
+  });
 
-  registros.push(novoRegistro);
   salvarNoStorage();
-  renderizarTabela();
+  renderizarTudo();
   limparCampos();
+  alert("Registro salvo com sucesso no histórico.");
+}
 
-  alert("Registro salvo com sucesso e gravado no navegador.");
+function obterOrdenados(){
+  return [...registros].sort((a,b) => {
+    const sa = Number(a.sequencia) || 0;
+    const sb = Number(b.sequencia) || 0;
+    if(sa !== sb) return sa - sb;
+    return a.id - b.id;
+  });
 }
 
 function renderizarTabela(){
   const tabela = document.getElementById("listaRegistros");
-
   if(registros.length === 0){
     tabela.innerHTML = '<tr><td colspan="9" class="vazio">Nenhum registro salvo ainda.</td></tr>';
     return;
   }
-
-  const ordenados = [...registros].sort((a,b) => Number(a.sequencia) - Number(b.sequencia));
-
-  tabela.innerHTML = ordenados.map(registro => `
+  tabela.innerHTML = obterOrdenados().map(registro => `
     <tr>
       <td>${registro.sequencia}</td>
       <td>${registro.nome}</td>
@@ -416,47 +463,68 @@ function renderizarTabela(){
       <td>${registro.hora}</td>
       <td>${registro.cameraUsada}</td>
       <td><img src="${registro.foto}" alt="Foto do figurino"></td>
-      <td>
-        <div class="acoes-linha">
-          <button class="btn-excluir-item" onclick="excluirRegistro(${registro.id})">Excluir</button>
-        </div>
-      </td>
+      <td><div class="acoes-linha"><button class="btn-excluir-item" onclick="excluirRegistro(${registro.id})">Excluir</button></div></td>
     </tr>
   `).join("");
 }
 
-function excluirRegistro(id){
-  const confirmar = confirm("Deseja excluir este registro?");
-  if(!confirmar) return;
+function renderizarGaleria(){
+  const galeria = document.getElementById("galeriaFotos");
+  if(registros.length === 0){
+    galeria.innerHTML = '<div class="vazio">Nenhuma foto salva ainda.</div>';
+    return;
+  }
+  galeria.innerHTML = obterOrdenados().map(registro => `
+    <div class="card-foto">
+      <img src="${registro.foto}" alt="${registro.nome}">
+      <div class="meta">
+        <div><strong>Seq. ${registro.sequencia}</strong> — ${registro.nome}</div>
+        <div>${registro.coreografia}</div>
+        <div class="${classeFigurino(registro.figurino)}">${registro.figurino}</div>
+        <div>${registro.data} • ${registro.hora}</div>
+        <div>Câmera: ${registro.cameraUsada}</div>
+      </div>
+    </div>
+  `).join("");
+}
 
+function renderizarTudo(){
+  renderizarTabela();
+  renderizarGaleria();
+  atualizarTotais();
+}
+
+function excluirRegistro(id){
+  if(!confirm("Deseja excluir este registro?")) return;
   registros = registros.filter(item => item.id !== id);
   salvarNoStorage();
-  renderizarTabela();
+  renderizarTudo();
 }
 
 function apagarTudo(){
-  const confirmar = confirm("Tem certeza que deseja apagar todos os registros salvos?");
-  if(!confirmar) return;
-
+  if(!confirm("Tem certeza que deseja apagar todos os registros salvos?")) return;
   registros = [];
   localStorage.removeItem(CHAVE_STORAGE);
-  renderizarTabela();
-  atualizarTotais();
+  renderizarTudo();
   alert("Todos os registros foram apagados.");
 }
 
 function exportarJSON(){
-  if(registros.length === 0){
-    alert("Não há registros para exportar.");
-    return;
-  }
-
+  if(registros.length === 0){ alert("Não há registros para exportar."); return; }
   const blob = new Blob([JSON.stringify(registros, null, 2)], { type: "application/json" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "backup-checklist-ensaio.json";
+  link.download = "backup-checklist-ensaio-historico.json";
   link.click();
   URL.revokeObjectURL(link.href);
+}
+
+function gerarPDFHistorico(){
+  if(registros.length === 0){
+    alert("Não há histórico para gerar PDF.");
+    return;
+  }
+  window.print();
 }
 
 function limparCampos(){
@@ -464,7 +532,6 @@ function limparCampos(){
   document.getElementById("coreografia").value = "";
   document.getElementById("sequencia").value = "";
   document.getElementById("figurino").selectedIndex = 0;
-
   imagemAtual = "";
   const preview = document.getElementById("preview");
   preview.src = "";
@@ -480,7 +547,5 @@ window.addEventListener("beforeunload", () => {
 carregarDoStorage();
 iniciarCamera();
 </script>
-<hr>
-<a href="index01.html"><h2>Checklist de Ensaio - Controle de Figurino</h2></a>
 </body>
 </html>
